@@ -1,0 +1,36 @@
+{% extends "citas/base.html" %}
+
+{% block titulo %}{{ titulo }}{% endblock %}
+
+{% block contenido %}
+<header class="encabezado-pagina">
+    <div>
+        <h1>{{ titulo }}</h1>
+        <p>{{ descripcion }}</p>
+    </div>
+    <div class="encabezado-acciones">
+        <span class="contador">{{ citas|length }} cita{{ citas|length|pluralize }}</span>
+        <a href="{% url 'nueva_cita' %}" class="boton">+ Programar cita</a>
+    </div>
+</header>
+
+{% regroup citas by fecha as dias %}
+{% for dia in dias %}
+<section class="dia">
+    <h2 class="dia-titulo">{{ dia.grouper|date:"l d \d\e F" }}</h2>
+    {% for c in dia.list %}
+    <div class="fila-cita">
+        <span class="hora hora-grande">{{ c.hora|time:"H:i" }}</span>
+        <span class="fila-info">
+            <strong><a class="enlace-sutil" href="{% url 'detalle_paciente' c.paciente.id %}">{{ c.paciente }}</a></strong>
+            <small>{{ c.motivo }}</small>
+        </span>
+        <span class="estado {{ c.estado|lower }}">{{ c.estado }}</span>
+        {% include "citas/_acciones_cita.html" %}
+    </div>
+    {% endfor %}
+</section>
+{% empty %}
+<p class="vacio">No hay citas para mostrar.</p>
+{% endfor %}
+{% endblock %}

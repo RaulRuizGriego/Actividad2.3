@@ -1,0 +1,45 @@
+{% extends "citas/base.html" %}
+
+{% block titulo %}{{ paciente }}{% endblock %}
+
+{% block contenido %}
+<a class="volver" href="{% url 'lista_pacientes' %}">← Pacientes</a>
+
+<section class="perfil">
+    <span class="avatar avatar-grande">{{ paciente.nombre|slice:":1" }}{{ paciente.apellido|slice:":1" }}</span>
+    <div class="perfil-datos">
+        <h1>{{ paciente.nombre }} {{ paciente.apellido }}</h1>
+        <p class="perfil-botones">
+            <a href="{% url 'editar_paciente' paciente.id %}" class="boton-mini">Editar paciente</a>
+            <a href="{% url 'nueva_cita' %}?paciente={{ paciente.id }}" class="boton-mini boton-aviso">Programar cita</a>
+        </p>
+        <ul>
+            <li><span>Edad</span>{{ paciente.edad }} años</li>
+            <li><span>Teléfono</span>{{ paciente.telefono }}</li>
+            <li><span>Correo</span>{{ paciente.correo }}</li>
+        </ul>
+    </div>
+    <div class="perfil-total">
+        <b>{{ citas|length }}</b>
+        <span>cita{{ citas|length|pluralize }}</span>
+    </div>
+</section>
+
+<section class="bloque">
+    <div class="bloque-cabecera"><h2>Historial de citas</h2></div>
+    {% for c in citas %}
+    <div class="fila-cita">
+        <span class="fecha-chip"><b>{{ c.fecha|date:"d" }}</b>{{ c.fecha|date:"M" }}</span>
+        <span class="fila-info">
+            <strong>{{ c.motivo }}</strong>
+            <small>{{ c.fecha|date:"l d \d\e F, Y" }}</small>
+        </span>
+        <span class="hora">{{ c.hora|time:"H:i" }}</span>
+        <span class="estado {{ c.estado|lower }}">{{ c.estado }}</span>
+        {% include "citas/_acciones_cita.html" %}
+    </div>
+    {% empty %}
+    <p class="vacio">Este paciente no tiene citas registradas.</p>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "citas/base.html" %}
+
+{% block titulo %}{{ titulo }}{% endblock %}
+
+{% block contenido %}
+<a class="volver" href="{% if paciente %}{% url 'detalle_paciente' paciente.id %}{% else %}{% url 'lista_pacientes' %}{% endif %}">← Volver</a>
+
+<header class="encabezado-pagina">
+    <div>
+        <h1>{{ titulo }}</h1>
+        <p>{% if paciente %}Modifica los datos de {{ paciente }}.{% else %}Captura los datos del nuevo paciente.{% endif %}</p>
+    </div>
+</header>
+
+{# novalidate: las validaciones las realiza el backend (Django), no solo el navegador #}
+<form method="post" class="formulario" novalidate>
+    {% csrf_token %}
+    {% include "citas/_campos.html" %}
+    <div class="formulario-acciones">
+        <button type="submit" class="boton">{{ boton }}</button>
+        <a href="{% if paciente %}{% url 'detalle_paciente' paciente.id %}{% else %}{% url 'lista_pacientes' %}{% endif %}" class="boton boton-claro">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

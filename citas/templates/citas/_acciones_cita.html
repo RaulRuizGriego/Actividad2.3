@@ -1,0 +1,16 @@
+{# Acciones de una cita: editar (GET), cancelar y eliminar (POST + CSRF) #}
+<span class="acciones">
+    <a href="{% url 'editar_cita' c.id %}" class="boton-mini">Editar</a>
+    {% if c.estado != 'Cancelada' %}
+    <form method="post" action="{% url 'cancelar_cita' c.id %}" onsubmit="return confirm('¿Cancelar esta cita?');">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button type="submit" class="boton-mini boton-aviso">Cancelar</button>
+    </form>
+    {% endif %}
+    <form method="post" action="{% url 'eliminar_cita' c.id %}" onsubmit="return confirm('¿Eliminar definitivamente esta cita? Esta acción no se puede deshacer.');">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button type="submit" class="boton-mini boton-peligro">Eliminar</button>
+    </form>
+</span>

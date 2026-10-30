@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titulo %}Panel{% endblock %} · Clínica Aurora</title>
+    <link rel="stylesheet" href="{% static 'citas/css/estilos.css' %}">
+</head>
+<body>
+    <input type="checkbox" id="alternar-menu" class="alternar-menu" aria-label="Abrir menú">
+
+    <header class="barra-movil">
+        <label for="alternar-menu" class="hamburguesa" aria-hidden="true"><span></span></label>
+        <strong>Clínica Aurora</strong>
+    </header>
+
+    <aside class="lateral">
+        <div class="marca">
+            <span class="marca-icono">+</span>
+            <div>
+                <strong>Clínica Aurora</strong>
+                <small>Consultorio médico</small>
+            </div>
+        </div>
+
+        <nav class="navegacion">
+            <a href="{% url 'inicio' %}" class="{% if request.path == '/' %}activo{% endif %}">
+                <span class="punto"></span>Resumen
+            </a>
+            <a href="{% url 'lista_pacientes' %}" class="{% if '/pacientes' in request.path %}activo{% endif %}">
+                <span class="punto"></span>Pacientes
+            </a>
+            <a href="{% url 'lista_citas' %}" class="{% if '/citas' in request.path and 'pendientes' not in request.path %}activo{% endif %}">
+                <span class="punto"></span>Agenda
+            </a>
+            <a href="{% url 'citas_pendientes' %}" class="{% if 'pendientes' in request.path %}activo{% endif %}">
+                <span class="punto"></span>Por confirmar
+            </a>
+        </nav>
+
+        <p class="lateral-pie">Gestión de pacientes y citas</p>
+    </aside>
+
+    <main class="principal">
+        {% if messages %}
+        <ul class="mensajes" role="status">
+            {% for mensaje in messages %}
+            <li class="mensaje {{ mensaje.tags }}">{{ mensaje }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% block contenido %}{% endblock %}
+    </main>
+</body>
+</html>

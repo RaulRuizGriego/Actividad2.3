@@ -1,0 +1,36 @@
+{% extends "citas/base.html" %}
+
+{% block titulo %}Pacientes{% endblock %}
+
+{% block contenido %}
+<header class="encabezado-pagina">
+    <div>
+        <h1>Pacientes</h1>
+        <p>{{ pacientes|length }} registrado{{ pacientes|length|pluralize }}.</p>
+    </div>
+    <div class="encabezado-acciones">
+        <form method="get" class="buscador">
+            <input type="search" name="q" value="{{ q }}" placeholder="Buscar por nombre o apellido">
+            <button type="submit">Buscar</button>
+        </form>
+        <a href="{% url 'nuevo_paciente' %}" class="boton">+ Nuevo paciente</a>
+    </div>
+</header>
+
+<div class="rejilla">
+    {% for p in pacientes %}
+    <div class="tarjeta-paciente">
+        <span class="avatar">{{ p.nombre|slice:":1" }}{{ p.apellido|slice:":1" }}</span>
+        <strong>{{ p.nombre }} {{ p.apellido }}</strong>
+        <span class="dato">{{ p.edad }} años</span>
+        <span class="dato">{{ p.telefono }}</span>
+        <span class="tarjeta-enlaces">
+            <a href="{% url 'detalle_paciente' p.id %}" class="ver">Ver ficha →</a>
+            <a href="{% url 'editar_paciente' p.id %}" class="ver">Editar</a>
+        </span>
+    </div>
+    {% empty %}
+    <p class="vacio">No se encontraron pacientes.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{# Muestra cada campo del formulario con su mensaje de error debajo #}
+{% if form.non_field_errors %}
+<div class="errores-generales">
+    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+</div>
+{% endif %}
+
+{% for campo in form %}
+<div class="campo{% if campo.errors %} campo-error{% endif %}">
+    <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+    {{ campo }}
+    {% for error in campo.errors %}
+    <p class="error-campo">{{ error }}</p>
+    {% endfor %}
+</div>
+{% endfor %}

@@ -1,0 +1,53 @@
+{% extends "citas/base.html" %}
+
+{% block titulo %}Resumen{% endblock %}
+
+{% block contenido %}
+<section class="portada">
+    <p class="sobretitulo">Panel del consultorio</p>
+    <h1>Buen día, doctor</h1>
+    <p>Consulta de un vistazo a tus pacientes y las citas que vienen.</p>
+    <p class="portada-botones">
+        <a href="{% url 'nuevo_paciente' %}" class="boton boton-claro">+ Nuevo paciente</a>
+        <a href="{% url 'nueva_cita' %}" class="boton boton-claro">+ Programar cita</a>
+    </p>
+</section>
+
+<section class="metricas">
+    <a class="metrica" href="{% url 'lista_pacientes' %}">
+        <span class="metrica-numero">{{ total_pacientes }}</span>
+        <span class="metrica-texto">Pacientes</span>
+    </a>
+    <a class="metrica" href="{% url 'lista_citas' %}">
+        <span class="metrica-numero">{{ total_citas }}</span>
+        <span class="metrica-texto">Citas registradas</span>
+    </a>
+    <a class="metrica metrica-aviso" href="{% url 'citas_pendientes' %}">
+        <span class="metrica-numero">{{ total_pendientes }}</span>
+        <span class="metrica-texto">Por confirmar</span>
+    </a>
+    <div class="metrica metrica-ok">
+        <span class="metrica-numero">{{ total_confirmadas }}</span>
+        <span class="metrica-texto">Confirmadas</span>
+    </div>
+</section>
+
+<section class="bloque">
+    <div class="bloque-cabecera">
+        <h2>Próximas por confirmar</h2>
+        <a href="{% url 'citas_pendientes' %}" class="enlace-flecha">Ver todas →</a>
+    </div>
+    {% for c in proximas %}
+    <a class="fila-cita" href="{% url 'detalle_paciente' c.paciente.id %}">
+        <span class="fecha-chip"><b>{{ c.fecha|date:"d" }}</b>{{ c.fecha|date:"M" }}</span>
+        <span class="fila-info">
+            <strong>{{ c.paciente }}</strong>
+            <small>{{ c.motivo }}</small>
+        </span>
+        <span class="hora">{{ c.hora|time:"H:i" }}</span>
+    </a>
+    {% empty %}
+    <p class="vacio">No hay citas por confirmar.</p>
+    {% endfor %}
+</section>
+{% endblock %}
